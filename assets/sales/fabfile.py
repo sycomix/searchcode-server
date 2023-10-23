@@ -56,7 +56,7 @@ def setup_installs():
     # https://certbot.eff.org/#ubuntuxenial-nginx
     sudo('add-apt-repository -y ppa:certbot/certbot')
     sudo('apt-get -y update')
-    sudo('apt-get -y --force-yes install %s' % ' '.join(packages))
+    sudo(f"apt-get -y --force-yes install {' '.join(packages)}")
     sudo('certbot certonly --standalone -d searchcodeserver.com')
 
     put('config/nginx/nginx.frontend.conf', '/etc/nginx/sites-available/default')
@@ -65,7 +65,7 @@ def setup_installs():
 
 def _setup_swapfile(size=1):
     if fabric.contrib.files.exists('/swapfile') == False:
-        sudo('''fallocate -l %sG /swapfile''' % (size))
+        sudo(f'''fallocate -l {size}G /swapfile''')
         sudo('''chmod 600 /swapfile''')
         sudo('''mkswap /swapfile''')
         sudo('''swapon /swapfile''')

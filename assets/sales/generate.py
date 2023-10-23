@@ -89,9 +89,7 @@ for conf in config:
         with open(conf['file'], 'r') as myfile:
             data = myfile.read()
 
-        if 'target' in conf:
-            pass
-        else:
+        if 'target' not in conf:
             with open(target + conf['file'].replace('./', ''), 'w') as myfile:
                 if '.json' not in conf['file']:
                     myfile.write(merged_header_template + pre_header + data + pre_footer + footer_template)

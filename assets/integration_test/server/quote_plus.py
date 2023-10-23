@@ -28,20 +28,11 @@ reposource = ''
 repobranch = ''
 
 # NB using quote not quote plus
-message = "pub=%s&reponame=%s&repourl=%s&repotype=%s&repousername=%s&repopassword=%s&reposource=%s&repobranch=%s" % (
-        urllib.quote(publickey),
-        urllib.quote(reponame),
-        urllib.quote(repourl),
-        urllib.quote(repotype),
-        urllib.quote(repousername),
-        urllib.quote(repopassword),
-        urllib.quote(reposource),
-        urllib.quote(repobranch)
-    )
+message = f"pub={urllib.quote(publickey)}&reponame={urllib.quote(reponame)}&repourl={urllib.quote(repourl)}&repotype={urllib.quote(repotype)}&repousername={urllib.quote(repousername)}&repopassword={urllib.quote(repopassword)}&reposource={urllib.quote(reposource)}&repobranch={urllib.quote(repobranch)}"
 
 sig = hmac(privatekey, message, sha1).hexdigest()
 
-url = "http://localhost:8080/api/repo/add/?sig=%s&%s" % (urllib.quote_plus(sig), message)
+url = f"http://localhost:8080/api/repo/add/?sig={urllib.quote_plus(sig)}&{message}"
 data = urllib2.urlopen(url)
 
 code = data.getcode()

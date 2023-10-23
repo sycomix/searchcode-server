@@ -7,7 +7,7 @@ from .common import get_blns
 
 
 def test_search_api():
-    url = get_base_url() + 'api/codesearch_I/?q=test'
+    url = f'{get_base_url()}api/codesearch_I/?q=test'
     r = requests.get(url)
     j = r.json()
 
@@ -16,7 +16,7 @@ def test_search_api():
 
 def test_search_api_blns():
     for naughty in get_blns():
-        url = get_base_url() + 'api/codesearch_I/?q=' + urllib.parse.quote_plus(naughty)
+        url = f'{get_base_url()}api/codesearch_I/?q={urllib.parse.quote_plus(naughty)}'
         r = requests.get(url)
         try:
             j = r.json()
@@ -27,7 +27,7 @@ def test_search_api_blns():
 
 
 def test_search_values():
-    url = get_base_url() + 'api/codesearch_I/?q=test'
+    url = f'{get_base_url()}api/codesearch_I/?q=test'
     r = requests.get(url)
     j = r.json()
 
