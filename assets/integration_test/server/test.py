@@ -22,10 +22,10 @@ class TestIntegration(unittest.TestCase):
         return data
 
     def getRandomLetters(self, count):
-        return ''.join(random.choice(string.letters) for i in xrange(count))
+        return ''.join(random.choice(string.letters) for _ in xrange(count))
 
     def testMainPage(self):
-        data = self.getData("http://%s/" % (host))
+        data = self.getData(f"http://{host}/")
         result = 'Searching across' in data or 'You have no repositories indexed' in data
         self.assertTrue(result)
         self.assertTrue('Repositories' in data)
@@ -33,78 +33,77 @@ class TestIntegration(unittest.TestCase):
         self.assertTrue('Admin' in data)
 
     def testDocumentationPage(self):
-        data = self.getData("http://%s/documentation/" % (host))
+        data = self.getData(f"http://{host}/documentation/")
         self.assertTrue('<h2>Documentation</h2>' in data)
 
     def testLoginPage(self):
-        data = self.getData("http://%s/login/" % (host))
+        data = self.getData(f"http://{host}/login/")
         self.assertTrue('Enter Password' in data)
 
     def testAdminRedirect(self):
-        data = self.getData("http://%s/admin/" % (host))
+        data = self.getData(f"http://{host}/admin/")
         self.assertTrue('Enter Password' in data)
 
     def testAdminBulkRedirect(self):
-        data = self.getData("http://%s/admin/bulk/" % (host))
+        data = self.getData(f"http://{host}/admin/bulk/")
         self.assertTrue('Enter Password' in data)
 
     def testAdminSettingsRedirect(self):
-        data = self.getData("http://%s/admin/settings/" % (host))
+        data = self.getData(f"http://{host}/admin/settings/")
         self.assertTrue('Enter Password' in data)
 
     def testJsonLoads(self):
-        data = self.getData("http://%s/api/codesearch/?q=test&p=0" % (host))
+        data = self.getData(f"http://{host}/api/codesearch/?q=test&p=0")
         data = json.loads(data)
         self.assertTrue('totalHits' in data)
 
     def testSearchJsPreload(self):
-        data = self.getData("http://%s/?q=test" % (host))
+        data = self.getData(f"http://{host}/?q=test")
         self.assertTrue('var preload = {' in data)
 
     def testSearch(self):
-        data = self.getData("http://%s/html/?q=test" % (host))
+        data = self.getData(f"http://{host}/html/?q=test")
         self.assertTrue('Filter Results' in data)
 
     def testCodeResults(self):
-        url = "http://%s/file/zeroclickinfo-fathead/lib/fathead/java/test_parse.py" % (
-            host)
+        url = f"http://{host}/file/zeroclickinfo-fathead/lib/fathead/java/test_parse.py"
         data = self.getData(url)
         #self.assertTrue('MD5 Hash' in data)
 
     def testRepositoryList(self):
-        url = "http://%s/repository/list/" % (host)
+        url = f"http://{host}/repository/list/"
         data = self.getData(url)
         self.assertTrue(
             '<script src="/js/intercooler-1.1.2.min.js"></script>' in data)
 
     def testNoSearch(self):
-        url = "http://%s/?q=&p=0" % (host)
+        url = f"http://{host}/?q=&p=0"
         data = self.getData(url)
         result = 'Searching across' in data or 'You have no repositories indexed' in data
         self.assertTrue(result)
 
     def testNoSearchHtml(self):
-        url = "http://%s/html/?q=&p=0" % (host)
+        url = f"http://{host}/html/?q=&p=0"
         self.getData(url)
 
     def testNoSearchJson(self):
-        url = "http://%s/api/codesearch/?q=&p=0" % (host)
+        url = f"http://{host}/api/codesearch/?q=&p=0"
         self.getData(url)
 
     def testSearchLoad(self):
-        for x in xrange(1000):
-            url = "http://%s/html/?q=%s" % (host, self.getRandomLetters(10))
+        for _ in xrange(1000):
+            url = f"http://{host}/html/?q={self.getRandomLetters(10)}"
             data = self.getData(url)
             self.assertTrue('No results found' in data)
 
     def test_index_suggest(self):
-        for x in xrange(1000):
-            url = "http://%s/api/repo/index/?repoUrl=http://test.com/" % (host)
+        for _ in xrange(1000):
+            url = f"http://{host}/api/repo/index/?repoUrl=http://test.com/"
             data = self.getData(url)
             self.assertTrue('Was unable to find repository' in data)
 
     def test_rss_search(self):
-        url = "http://%s/api/codesearch/rss/?q=test&p=0" % (host)
+        url = f"http://{host}/api/codesearch/rss/?q=test&p=0"
         data = self.getData(url)
         self.assertTrue('title>Search for "test"</title>' in data)
         self.assertTrue(
@@ -123,7 +122,7 @@ class TestIntegration(unittest.TestCase):
         ]
 
         for url in urls:
-            url = 'http://%s/%s' % (host, url)
+            url = f'http://{host}/{url}'
             data = urllib2.urlopen(url)
             header = data.info().getheader('Content-Type')
             self.assertEqual(header, 'application/json', url)
@@ -136,31 +135,24 @@ class TestIntegration(unittest.TestCase):
         ]
 
         for url in urls:
-            url = 'http://%s/%s' % (host, url)
+            url = f'http://{host}/{url}'
             urllib2.urlopen(url)
 
     def testFuzzyBadData(self):
-        self.getData("http://%s/html/?q=test&p=100" % (host))
-        self.getData("http://%s/html/?q=test&p=a" % (host))
-        self.getData("http://%s/html/?&p=a" % (host))
-        self.getData("http://%s/html/?q=test&p=1asds" % (host))
-        self.getData("http://%s/html/?q=test&p=1&repo=test&lan=test" % (host))
+        self.getData(f"http://{host}/html/?q=test&p=100")
+        self.getData(f"http://{host}/html/?q=test&p=a")
+        self.getData(f"http://{host}/html/?&p=a")
+        self.getData(f"http://{host}/html/?q=test&p=1asds")
+        self.getData(f"http://{host}/html/?q=test&p=1&repo=test&lan=test")
 
-        for x in xrange(1000):
-            url = "http://%s/html/?%s=%s&%s=%s" % (
-                host,
-                self.getRandomLetters(1),
-                self.getRandomLetters(10),
-                self.getRandomLetters(1),
-                self.getRandomLetters(10))
+        for _ in xrange(1000):
+            url = f"http://{host}/html/?{self.getRandomLetters(1)}={self.getRandomLetters(10)}&{self.getRandomLetters(1)}={self.getRandomLetters(10)}"
             self.getData(url)
 
-        for x in xrange(1000):
-            self.getData("http://%s/html/?q=%s&repo=%s&lan=%s" % (
-                host,
-                self.getRandomLetters(10),
-                self.getRandomLetters(10),
-                self.getRandomLetters(10)))
+        for _ in xrange(1000):
+            self.getData(
+                f"http://{host}/html/?q={self.getRandomLetters(10)}&repo={self.getRandomLetters(10)}&lan={self.getRandomLetters(10)}"
+            )
 
 
 if __name__ == "__main__":

@@ -6,7 +6,7 @@ from .common import get_blns
 
 
 def test_search():
-    url = get_base_url() + '?q=test'
+    url = f'{get_base_url()}?q=test'
     r = requests.get(url)
 
     assert r.status_code == 200
@@ -25,7 +25,7 @@ def test_search_invalid_encoding():
 
 def test_search_blns():
     for naughty in get_blns():
-        url = get_base_url() + '?q=' + urllib.parse.quote_plus(naughty)
+        url = f'{get_base_url()}?q={urllib.parse.quote_plus(naughty)}'
         r = requests.get(url)
 
         assert r.status_code == 200, url

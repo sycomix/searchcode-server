@@ -4,11 +4,11 @@ BASE_URL = 'BASE_URL'
 
 
 def get_base_url():
-    base_url = 'http://localhost:8080/'
-    if BASE_URL in os.environ:
-        base_url = os.environ['BASE_URL']
-
-    return base_url
+    return (
+        os.environ['BASE_URL']
+        if BASE_URL in os.environ
+        else 'http://localhost:8080/'
+    )
 
 
 def get_blns():

@@ -112,7 +112,7 @@ def stress_test():
 
 def run():
     package()
-    local("java -jar ./target/searchcode-%s.jar" % (VERSION))
+    local(f"java -jar ./target/searchcode-{VERSION}.jar")
 
 
 def pushtagbranch():
@@ -187,7 +187,8 @@ def compile_js():
 
     tomin = ' ./src/main/resources/public/js/'.join(files)
     local(
-        'java -jar ./assets/js_compiler/compiler.jar  --js_output_file=./src/main/resources/public/js/script.min.js --js ' + tomin)
+        f'java -jar ./assets/js_compiler/compiler.jar  --js_output_file=./src/main/resources/public/js/script.min.js --js {tomin}'
+    )
 
 
 def configure_local():

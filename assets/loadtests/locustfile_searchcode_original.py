@@ -12,7 +12,7 @@ class UserBehavior(TaskSet):
         return '''https://searchcode.com'''
 
     def coderesult(self):
-        url = '/file/' + random.choice(range(1, 60000000)) + '/locusttest'
+        url = f'/file/{random.choice(range(1, 60000000))}/locusttest'
         self.client.get(self.domain() + url)
 
     def get_random_search(self):
@@ -22,7 +22,7 @@ class UserBehavior(TaskSet):
         return random.choice(cache)
 
     def searchresult(self):
-        url = '?q=' + get_random_search()
+        url = f'?q={get_random_search()}'
         self.client.get(self.domain() + url)
 
     @task(10)

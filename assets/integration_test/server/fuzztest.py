@@ -22,63 +22,71 @@ class TestIntegration(unittest.TestCase):
         return data
 
     def getRandomCharacters(self, count):
-        return ''.join(random.choice(string.printable) for i in xrange(count))
+        return ''.join(random.choice(string.printable) for _ in xrange(count))
 
     def getRandomLetters(self, count):
-        return ''.join(random.choice(string.letters) for i in xrange(count))
+        return ''.join(random.choice(string.letters) for _ in xrange(count))
 
 
     def testFuzzSearchLetters(self):
-        for x in xrange(1000):
+        for _ in xrange(1000):
             one = urllib.urlencode({'q': self.getRandomLetters(10)})
             two = urllib.urlencode({'repo': self.getRandomLetters(10)})
-            
-            url = "http://%s/html/?%s&%s" % (host, one, two)
+
+            url = f"http://{host}/html/?{one}&{two}"
             data = self.getData(url)
             self.assertTrue('No results found for' in data)
 
     def testFuzzSearchLettersTilde(self):
-        for x in xrange(1000):
+        for _ in xrange(1000):
             one = urllib.urlencode({'q': self.getRandomLetters(10)})
-            two = urllib.urlencode({'repo': '~' + self.getRandomLetters(10)})
-            
-            url = "http://%s/html/?%s&%s" % (host, one, two)
+            two = urllib.urlencode({'repo': f'~{self.getRandomLetters(10)}'})
+
+            url = f"http://{host}/html/?{one}&{two}"
             data = self.getData(url)
             self.assertTrue('No results found for' in data)
 
     def testFuzzSearchLettersTildeSlash(self):
-        for x in xrange(1000):
+        for _ in xrange(1000):
             one = urllib.urlencode({'q': self.getRandomLetters(10)})
-            two = urllib.urlencode({'repo': '~' + self.getRandomLetters(10) + '/' + self.getRandomLetters(10) })
-            
-            url = "http://%s/html/?%s&%s" % (host, one, two)
+            two = urllib.urlencode(
+                {
+                    'repo': f'~{self.getRandomLetters(10)}/{self.getRandomLetters(10)}'
+                }
+            )
+
+            url = f"http://{host}/html/?{one}&{two}"
             data = self.getData(url)
             self.assertTrue('No results found for' in data)
 
     def testFuzzSearchCharacters(self):
-        for x in xrange(1000):
+        for _ in xrange(1000):
             one = urllib.urlencode({'q': self.getRandomCharacters(10)})
             two = urllib.urlencode({'repo': self.getRandomCharacters(10)})
-            
-            url = "http://%s/html/?%s&%s" % (host, one, two)
+
+            url = f"http://{host}/html/?{one}&{two}"
             data = self.getData(url)
             self.assertTrue('No results found for' in data)
 
     def testFuzzSearchCharactersTilde(self):
-        for x in xrange(1000):
+        for _ in xrange(1000):
             one = urllib.urlencode({'q': self.getRandomCharacters(10)})
-            two = urllib.urlencode({'repo': '~' + self.getRandomCharacters(10)})
-            
-            url = "http://%s/html/?%s&%s" % (host, one, two)
+            two = urllib.urlencode({'repo': f'~{self.getRandomCharacters(10)}'})
+
+            url = f"http://{host}/html/?{one}&{two}"
             data = self.getData(url)
             self.assertTrue('No results found for' in data)
 
     def testFuzzSearchCharactersTildeSlash(self):
-        for x in xrange(1000):
+        for _ in xrange(1000):
             one = urllib.urlencode({'q': self.getRandomCharacters(10)})
-            two = urllib.urlencode({'repo': '~' + self.getRandomCharacters(10)  + '/' + self.getRandomLetters(10) })
-            
-            url = "http://%s/html/?%s&%s" % (host, one, two)
+            two = urllib.urlencode(
+                {
+                    'repo': f'~{self.getRandomCharacters(10)}/{self.getRandomLetters(10)}'
+                }
+            )
+
+            url = f"http://{host}/html/?{one}&{two}"
             data = self.getData(url)
             self.assertTrue('No results found for' in data)
 
@@ -92,8 +100,8 @@ class TestIntegration(unittest.TestCase):
         for line in blns:
             one = urllib.urlencode({'q': line})
             two = urllib.urlencode({'repo': line})
-            
-            url = "http://%s/html/?%s&%s" % (host, one, two)
+
+            url = f"http://{host}/html/?{one}&{two}"
             data = self.getData(url)
             self.assertTrue('No results found for' in data)
 
